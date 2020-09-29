@@ -3,7 +3,6 @@ C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\bin\Debug\desafio_
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\bin\Debug\desafio_bludata.pdb
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.csprojAssemblyReference.cache
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.Empresa.resources
-C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.Form1.resources
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.Properties.Resources.resources
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.csproj.GenerateResource.cache
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.exe
@@ -34,3 +33,4 @@ C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\bin\Debug\System.N
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.csproj.CopyComplete
 C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.ConsultaFornecedores.resources
+C:\Users\Samsung\source\repos\desafio_bludata\desafio_bludata\obj\Debug\desafio_bludata.Cadastro.resources

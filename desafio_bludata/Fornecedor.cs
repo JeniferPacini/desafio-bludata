@@ -21,6 +21,12 @@ namespace desafio_bludata
 
         private void btn_gravar_bd_Click(object sender, EventArgs e)
         {
+            if(cbx_seleciona_empresa.SelectedIndex <= 0)
+            {
+                MessageBox.Show("O campo empresa é obrigatório!");
+                return;
+            }
+
             if(txt_nome_fornecedor.Text == "")
             {
                 MessageBox.Show(" O campo nome é obrigatório!");
@@ -56,24 +62,29 @@ namespace desafio_bludata
 
             SqlConnection conn = new SqlConnection("Data Source=LAPTOP-JA44IVG8;Initial Catalog=Desafio_Bludata;Integrated Security=True");
 
-            string sqlEmpresa = "INSERT INTO dbo.Fornecedores(nomeForn, cpf_cnpj, rg, dataCadastro, idEmpresa, fisicaJuridica, telefone";
+            string sqlFornecedor = "INSERT INTO dbo.Fornecedores(nomeForn, cpf_cnpj, rg, dataCadastro, idEmpresa, fisicaJuridica";
             
             if (rb_fisica.Checked)
             {
-                sqlEmpresa = sqlEmpresa + ", nascimento";
+                sqlFornecedor = sqlFornecedor + ", nascimento";
             }
 
-            sqlEmpresa = sqlEmpresa + ") VALUES (@nomeForn, @cpf_cnpj, @rg, @dataCadastro, @idEmpresa, @fisicaJuridica, @telefone";
+            sqlFornecedor = sqlFornecedor + ") VALUES (@nomeForn, @cpf_cnpj, @rg, @dataCadastro, @idEmpresa, @fisicaJuridica";
 
             if (rb_fisica.Checked)
             {
-                sqlEmpresa = sqlEmpresa + ", @nascimento";
+                sqlFornecedor = sqlFornecedor + ", @nascimento";
             }
-            sqlEmpresa = sqlEmpresa + ')';
+            sqlFornecedor = sqlFornecedor + ')';
+
+            string sqlSelectId = "SELECT MAX(idFornecedor) as id from dbo.Fornecedores";
+            string sqlTelefones = "INSERT INTO dbo.Fornecedores_tel(telefone, idFornecedor) VALUES (@telefone, @idFornecedor)";
 
             try
             {
-                SqlCommand c = new SqlCommand(sqlEmpresa, conn);
+                SqlCommand c = new SqlCommand(sqlFornecedor, conn);
+                SqlCommand select = new SqlCommand(sqlSelectId, conn);
+                SqlCommand tel = new SqlCommand(sqlTelefones, conn);
 
                 string fj = "F";
                 if (rb_juridica.Checked)
@@ -93,12 +104,25 @@ namespace desafio_bludata
                 c.Parameters.Add(new SqlParameter("@dataCadastro", DateTime.Now));
                 c.Parameters.Add(new SqlParameter("@idEmpresa", empresa.idEmpresa));
                 c.Parameters.Add(new SqlParameter("@fisicaJuridica", fj));
-                c.Parameters.Add(new SqlParameter("@telefone", txt_tel.Text));
-
 
                 conn.Open();
 
                 c.ExecuteNonQuery();
+
+                SqlDataReader reader = select.ExecuteReader();
+                reader.Read();
+                int idFornecedor = Convert.ToInt32(reader["id"].ToString());
+                reader.Close();
+
+                foreach (string telefone in list_tel.Items)
+                {
+                    tel.Parameters.Clear();
+
+                    tel.Parameters.Add(new SqlParameter("@telefone", telefone));
+                    tel.Parameters.Add(new SqlParameter("@idFornecedor", idFornecedor));
+
+                    tel.ExecuteNonQuery();
+                }
 
                 conn.Close();
 
@@ -109,6 +133,7 @@ namespace desafio_bludata
                 txt_nasci.Text = "";
                 txt_rg.Text = "";
                 txt_tel.Text = "";
+                cbx_seleciona_empresa.Focus();
 
             }
             catch (SqlException ex)
@@ -119,6 +144,7 @@ namespace desafio_bludata
             {
                 conn.Close();
             }
+
         }
 
         private void rb_fisica_CheckedChanged(object sender, EventArgs e)
@@ -190,6 +216,30 @@ namespace desafio_bludata
         {
             ConsultaFornecedores consultar = new ConsultaFornecedores();
             consultar.ShowDialog();
+        }
+
+        private void Fornecedor_Load(object sender, EventArgs e)
+        {
+            panel1.BackColor = Color.FromArgb(200, 0, 0, 0);
+        }
+
+        private void btn_add_tel_Click(object sender, EventArgs e)
+        {
+            if (list_tel.FindString(txt_tel.Text) < 0)
+            {
+                list_tel.Items.Add(txt_tel.Text);
+            }
+
+            txt_tel.Text = "";
+            txt_tel.Focus();
+        }
+
+        private void btn_apaga_tel_Click(object sender, EventArgs e)
+        {
+            if (list_tel.SelectedIndex >= 0)
+            {
+                list_tel.Items.RemoveAt(list_tel.SelectedIndex);
+            }
         }
     }
     

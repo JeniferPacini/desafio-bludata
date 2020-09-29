@@ -37,7 +37,7 @@ namespace desafio_bludata
                 {
                     where = where + " and ";
                 }
-                where = where + "  nomeForn like '%" + nome + "%' ";
+                where = where + "  forn.nomeForn like '%" + nome + "%' ";
             }
 
             if (cpf_cnpj != "")
@@ -50,7 +50,7 @@ namespace desafio_bludata
                 {
                     where = where + " and ";
                 }
-                where = where + "  cpf_cnpj like '%" + cpf_cnpj + "%' ";
+                where = where + "  forn.cpf_cnpj like '%" + cpf_cnpj + "%' ";
             }
 
             try
@@ -65,7 +65,7 @@ namespace desafio_bludata
                 {
                     where = where + " and ";
                 }
-                where = where + " dataCadastro >= '" + data + "'";
+                where = where + " forn.dataCadastro >= '" + data + "'";
             }
             catch
             {
@@ -84,17 +84,24 @@ namespace desafio_bludata
                 {
                     where = where + " and ";
                 }
-                where = where + " dataCadastro <= '" + data + " 23:59:59'";
+                where = where + " forn.dataCadastro <= '" + data + " 23:59:59'";
             }
             catch
             {
                 // Data não preenchida
             }
 
+            string sql = "Select forn.nomeForn as 'Fornecedor', " +
+                " forn.cpf_cnpj as 'CPF/CNPJ', forn.rg as 'RG', forn.nascimento as 'Data nascimento', " +
+                " forn.dataCadastro as 'Data cadastro', forn.fisicaJuridica as 'Tipo pessoa', emp.nomeEmpresa as 'Empresa', " +
+                " STUFF((select ', ' + tel.telefone from fornecedores_tel tel where tel.idFornecedor = forn.idFornecedor FOR XML PATH ( '' )), 1, 1, '') as 'Telefones'" +
+                " From fornecedores forn " +
+                " left join empresa emp on (emp.idEmpresa = forn.idEmpresa) ";
+
             SqlConnection conn = new SqlConnection("Data Source=LAPTOP-JA44IVG8;Initial Catalog=Desafio_Bludata;Integrated Security=True");
 
             DataTable tabela = new DataTable();
-            SqlDataAdapter dataAdapter = new SqlDataAdapter ("Select * From fornecedores " + where, "Data Source=LAPTOP-JA44IVG8;Initial Catalog=Desafio_Bludata;Integrated Security=True");
+            SqlDataAdapter dataAdapter = new SqlDataAdapter (sql + where, "Data Source=LAPTOP-JA44IVG8;Initial Catalog=Desafio_Bludata;Integrated Security=True");
 
             conn.Open();
 
@@ -103,6 +110,11 @@ namespace desafio_bludata
             conn.Close();
 
             return tabela;
+        }
+
+        private void ConsultaFornecedores_Load(object sender, EventArgs e)
+        {
+            panel1.BackColor = Color.FromArgb(200, 0, 0, 0);
         }
     }
 }

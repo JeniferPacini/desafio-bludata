@@ -27,7 +27,7 @@ namespace desafio_bludata
 
         private void Empresa_Load(object sender, EventArgs e)
         {
-
+            panel1.BackColor = Color.FromArgb(200, 0, 0, 0);
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -37,6 +37,27 @@ namespace desafio_bludata
 
         private void btn_gravar_bd_Click(object sender, EventArgs e)
         {
+
+            if (txt_nome_empresa.Text == "")
+            {
+                MessageBox.Show("O nome da empresa é obrigatório");
+                return;
+            }
+
+            if(txt_cnpj.Text == "")
+            {
+                MessageBox.Show("O CNPJ é obrigatório");
+                return;
+
+            }
+
+            if (cbx_uf.SelectedIndex <= 0 )
+            {
+                MessageBox.Show("A UF é obrigatória");
+                return;
+
+            }
+
             SqlConnection conn = new SqlConnection("Data Source=LAPTOP-JA44IVG8;Initial Catalog=Desafio_Bludata;Integrated Security=True");
 
             string sqlEmpresa = "INSERT INTO dbo.Empresa(nomeEmpresa, cnpj, uf) VALUES (@nomeEmpresa, @cnpj, @uf)";
@@ -58,6 +79,7 @@ namespace desafio_bludata
                 txt_nome_empresa.Clear();
                 txt_cnpj.Clear();
                 cbx_uf.Text = "";
+                txt_nome_empresa.Focus();
 
                 MessageBox.Show("Empresa gravada com sucesso!");
             }
